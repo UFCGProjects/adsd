@@ -23,28 +23,26 @@ public class Barbearia implements Runnable {
         c.setId(mCurrentId++);
         mClients.add(c);
 
-        Utils.log(getStatus() + "[CLIENT-ADD] \t[ID:" + c.getId() + "]");
+        Utils.log(getQueue(), "CLIENT-ADD", String.valueOf(c.getId()));
     }
 
-    public String getStatus() {
+    public String getQueue() {
+        if (mClients.size() == 0) {
+            return "";
+        }
+
         String status = "";
 
         for (int i = 0; i < mClients.size(); i++) {
             status += mClients.get(i).getId() + ",";
         }
 
-        if (status.length() > 0) {
-            status = "[" + status.substring(0, status.length() - 1) + "]";
-        } else {
-            status = "[]";
-        }
-
-        return String.format("%-20s", status);
+        return status.substring(0, status.length() - 1);
     }
 
     @Override
     public void run() {
-        Utils.log(getStatus() + "[BARBEARIA-START]");
+        Utils.log("QUEUE", "EVENT", "CLIENT_ID", "OTHERS");
 
         while (true) {
 
@@ -60,14 +58,14 @@ public class Barbearia implements Runnable {
             final Cliente c = mClients.pop();
             c.setTimeToFinish(Instant.now().plus(c.getDuration() * mTimeDuration));
 
-            Utils.log(getStatus() + "[CLIENT-START]\t[ID:" + c.getId() + "]\t[FINISH-AT:"
-                    + Utils.formatTime(c.getTimeToFinish()) + "]");
+            Utils.log(getQueue(), "CLIENT-START", String.valueOf(c.getId()), "FINISH-AT:"
+                    + Utils.formatTime(c.getTimeToFinish()));
 
             while (Instant.now().getMillis() < c.getTimeToFinish().getMillis()) {
                 // Espera terminar o corte de cabelo
             }
 
-            Utils.log(getStatus() + "[CLIENT-END] \t[ID:" + c.getId() + "]");
+            Utils.log(getQueue(), "CLIENT-END", String.valueOf(c.getId()));
 
         }
 

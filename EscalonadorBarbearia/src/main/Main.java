@@ -11,10 +11,10 @@ public class Main {
     private static Escalonador mEscalonador;
 
     public static void main(final String[] args) {
-        final int timeDuration = 100;
+        final int timeDuration = 10;
 
         mBarbearia = new Barbearia(timeDuration);
-        mEscalonador = new Escalonador(mBarbearia, new GeradorMisto(7, 10), timeDuration);
+        mEscalonador = new Escalonador(mBarbearia, new GeradorMisto(97, 83), timeDuration);
 
         new Thread(mBarbearia).start();
         new Thread(mEscalonador).start();
