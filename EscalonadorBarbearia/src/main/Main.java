@@ -5,8 +5,6 @@ import core.Barbearia;
 import core.Escalonador;
 import core.GeradorMisto;
 
-import java.util.Scanner;
-
 public class Main {
 
     private static Barbearia mBarbearia;
@@ -21,13 +19,6 @@ public class Main {
         new Thread(mBarbearia).start();
         new Thread(mEscalonador).start();
 
-        final Scanner sc = new Scanner(System.in);
-
-        if (sc.nextInt() == 1) {
-            mBarbearia.setIsOpen(false);
-        }
-
-        sc.close();
     }
 
 }

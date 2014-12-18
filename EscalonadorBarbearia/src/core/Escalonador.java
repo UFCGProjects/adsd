@@ -19,7 +19,7 @@ public class Escalonador implements Runnable {
     @Override
     public void run() {
 
-        while (mBarbearia.getIsOpen()) {
+        while (true) {
             mNextCliente = new Cliente(mGerador.next());
 
             final Instant timeToArrive = Instant.now().plus(mGerador.next() * mTimeDuration);

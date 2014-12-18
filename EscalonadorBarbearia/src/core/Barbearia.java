@@ -11,7 +11,6 @@ public class Barbearia implements Runnable {
 
     private final LinkedList<Cliente> mClients;
     private int mCurrentId;
-    private boolean mIsOpen;
     private final int mTimeDuration;
 
     public Barbearia(final int timeDuration) {
@@ -27,21 +26,27 @@ public class Barbearia implements Runnable {
         Utils.log(getStatus() + "[CLIENT-ADD] \t[ID:" + c.getId() + "]");
     }
 
-    public boolean getIsOpen() {
-        return mIsOpen;
-    }
+    public String getStatus() {
+        String status = "";
 
-    public void setIsOpen(final boolean isOpen) {
-        mIsOpen = isOpen;
+        for (int i = 0; i < mClients.size(); i++) {
+            status += mClients.get(i).getId() + ",";
+        }
+
+        if (status.length() > 0) {
+            status = "[" + status.substring(0, status.length() - 1) + "]";
+        } else {
+            status = "[]";
+        }
+
+        return String.format("%-20s", status);
     }
 
     @Override
     public void run() {
-        setIsOpen(true);
-
         Utils.log(getStatus() + "[BARBEARIA-START]");
 
-        while (getIsOpen()) {
+        while (true) {
 
             while (mClients.size() <= 0) {
                 // Espera cliente chegar...
@@ -66,22 +71,6 @@ public class Barbearia implements Runnable {
 
         }
 
-        Utils.log(getStatus() + "[BARBEARIA-END]");
     }
 
-    public String getStatus() {
-        String status = "";
-
-        for (int i = 0; i < mClients.size(); i++) {
-            status += mClients.get(i).getId() + ",";
-        }
-
-        if (status.length() > 0) {
-            status = "[" + status.substring(0, status.length() - 1) + "]";
-        } else {
-            status = "[]";
-        }
-
-        return String.format("%-20s", status);
-    }
 }
