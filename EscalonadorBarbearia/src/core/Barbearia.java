@@ -11,19 +11,25 @@ public class Barbearia implements Runnable {
 
     private final LinkedList<Cliente> mClients;
     private int mCurrentId;
+    private int mClienteCortando;
     private final int mTimeDuration;
 
     public Barbearia(final int timeDuration) {
         mClients = new LinkedList<Cliente>();
         mCurrentId = 1;
         mTimeDuration = timeDuration;
+        mClienteCortando = 0;
     }
 
     public void addCliente(final Cliente c) {
         c.setId(mCurrentId++);
         mClients.add(c);
 
-        Utils.log(getQueue(), "CLIENT-ADD", String.valueOf(c.getId()));
+        if (mClienteCortando == 0) {
+            Utils.log("C-ADD", getQueue(), "");
+        } else {
+            Utils.log("C-ADD", getQueue(), String.valueOf(mClienteCortando));
+        }
     }
 
     public String getQueue() {
@@ -42,7 +48,8 @@ public class Barbearia implements Runnable {
 
     @Override
     public void run() {
-        Utils.log("QUEUE", "EVENT", "CLIENT_ID", "OTHERS");
+        Utils.log("EVENT", "QUEUE", "CLIENTE_BARBEIRO", "OTHERS");
+        Utils.log("START", "", "");
 
         while (true) {
 
@@ -57,15 +64,16 @@ public class Barbearia implements Runnable {
 
             final Cliente c = mClients.pop();
             c.setTimeToFinish(Instant.now().plus(c.getDuration() * mTimeDuration));
+            mClienteCortando = c.getId();
 
-            Utils.log(getQueue(), "CLIENT-START", String.valueOf(c.getId()), "FINISH-AT:"
+            Utils.log("C-START", getQueue(), String.valueOf(mClienteCortando), "FINISH-AT:"
                     + Utils.formatTime(c.getTimeToFinish()));
 
             while (Instant.now().getMillis() < c.getTimeToFinish().getMillis()) {
                 // Espera terminar o corte de cabelo
             }
 
-            Utils.log(getQueue(), "CLIENT-END", String.valueOf(c.getId()));
+            Utils.log("C-END", getQueue(), "");
 
         }
 
